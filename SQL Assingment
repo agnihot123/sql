@@ -1,0 +1,96 @@
+--1.Which manufacturer's planes had most no of flights? And how many flights?
+
+select p."manufacturer", count(*)
+from flights f, planes p
+where p."tailnum" = f."tailnum"
+group by p."manufacturer"
+order by count(*) desc;
+
+ --BOEING             1103
+--AIRBUS             696
+--AIRBUS INDUSTRIE       516
+
+ 
+
+ 
+
+--2.Which manufacturer's planes had most no of flying hours? And how many hours?
+
+----
+select p."manufacturer",  sum(to_number(trim(f."hour")) + to_number(trim(f."minute"))/60 )
+from flights f, planes p
+where p."tailnum" = f."tailnum"
+and p."manufacturer" = 'BOEING'
+group by p."manufacturer";
+
+--BOEING             14872.0333333333
+
+ 
+
+--3.Which plane flew the most number of hours? And how many hours?
+
+select f."tailnum", f."flight", sum(to_number(f."air_time"))  from flights f
+group by f."tailnum", f."flight";
+
+ 
+
+ 
+
+--4. Which destination had most delay in flights?
+
+select sum(abs(to_number(f."arr_delay"))), f."dest"  from flights f
+group by f."dest"
+order by sum(abs(to_number(f."arr_delay"))) desc;
+
+ 
+
+---the query should return max delay as top row but this was throwing invalid number error
+
+---
+
+select sum(abs(to_number(f."arr_delay"))), f."dest" from flights f
+where f."tailnum" = 'N14228'
+group by f."dest";
+
+--11       IAH
+
+ 
+
+select sum(abs(to_number(f."arr_delay"))), f."dest" from flights f
+where f."tailnum" = 'N804JB'
+group by f."dest";
+
+ 
+
+--5.Which manufactures planes had covered most distance? And how much distance?
+
+select p."manufacturer",  sum(to_number(trim(f."distance")))
+from flights f, planes p
+where p."tailnum" = f."tailnum"
+and p."manufacturer" = 'BOEING'
+group by p."manufacturer";
+
+--BOEING             1644180
+
+ 
+
+--6. Which airport had most flights on weekends?
+
+select count(*) as no_of_flights, f."origin" from flights f
+where f."day" in (5,6)
+group by f."origin"
+order by count(*) desc
+;
+
+ 
+
+--325     JFK
+
+ 
+
+ 
+
+select count(*), f."dest" from flights f
+where f."day" in (5,6)
+group by f."dest"
+order by count(*) desc;
