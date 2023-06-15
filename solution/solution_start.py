@@ -38,7 +38,10 @@ def main():
     print(cust_trans)
     product_trans =cust_trans['basket'].to_csv()
     print(product_trans)
-
+    customer = cust_trans['customer_id'].tolist()
+    product_trans = cust_trans['basket'].tolist()
+    df = expand(products,cust_trans,'product_id')
+    print(df)
 
 ####
 
